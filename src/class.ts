@@ -16,6 +16,7 @@ class Teacher extends Person {
     }
     greeting() {
         console.log(`Hello! My name is ${this.name}. I am ${this.age}. I teach ${this.subject}.`);
+        console.log('test')
     }
 }
 const teacher = new Teacher('Quil', 38, 'Math');
