@@ -42,9 +42,33 @@ function toUpperCase(x: string | number) {
 // const upperHello = toUpperCase('hello') as string;
 //この場合に型アサーションを使う☝︎
 //ただし、いろんなところでUpperCaseを使うこと考えるといちいち、as~と定義し直さないといけない
-const upperHello = toUpperCase('hello');
+// const upperHello = toUpperCase('hello');
 
-
+interface TmpFunc {
+    (x: string): number;
+    (x: number): number;
+}
+const upperHello: TmpFunc = function (x: string | number) {return 0};
+// interface FuncA {
+//     (a: number, b: string): number;
+//     (a: string, b: number): number;
+// }
+// interface FuncB {
+//     (a:string): number;
+// }
+// let intersectionFunc: FuncA & FuncB;
+// intersectionFunc = function(a: string | number, b?: number | string) {return 0};
+// // FuncAもFuncBも両方満たす
+interface FuncA {
+    (a: number): number;
+}
+interface FuncB {
+    (a:string): string;
+}
+let unionFunc: FuncA | FuncB;
+//パラメータがnever、返り値がintersection型
+unionFunc();
+// FuncAもFuncBも両方満たす
 type NomadWorker = Engineer | Bloggler;
 function describeProfile(nomadWorker: NomadWorker) {
     console.log(nomadWorker.name);
@@ -136,3 +160,41 @@ const desig: Desig = {
     1: 'web'
 }
 
+
+interface DownloadedData {
+    id: number;
+    user?: {
+    //?はundefinedかもしれない
+        name?: {
+            first: string;
+            last: string;
+        }
+    }
+}
+const downloadedData: DownloadedData = {
+    id: 1
+}
+console.log(downloadedData.user?.name?.first);
+
+const userData = downloadedData.user ?? 'no-user'
+
+//lookup型とは
+//例）DownloadedDataというinterfaceの中のidが持っている型を探す時に使う
+
+type id = DownloadedData["id"]
+
+
+function advancedFn(...args: readonly [number, string, boolean, ...number[]]) {
+}
+advancedFn(0, 'hi', true, 3, 3, 3)
+let milk = 'milk' as const;
+//as constとすることでmilkがstringではなく、'milk'になる
+const array = [10, 20] as const
+//arrayはreadonly [10, 20]というtuple型になる
+const peter = {
+    name: 'Peter',
+    age: 38
+} as const;
+//as costとすると定数になる
+type PeterType = typeof peter;
+//typeofを使うことでpeterの型を指定できる
